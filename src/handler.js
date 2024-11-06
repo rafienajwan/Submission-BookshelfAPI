@@ -38,12 +38,12 @@ const addBookHandler = (request, h) => {
   }).code(201);
 };
 
-const getAllBooksHandler = (request) => {
+const getAllBooksHandler = (request, h) => {
   const { name, reading, finished } = request.query;
 
   let filteredBooks = books;
 
-  if (name) {
+  if (name !== undefined) {
     filteredBooks = filteredBooks.filter((book) => book.name.toLowerCase().includes(name.toLowerCase()));
   }
 
@@ -55,12 +55,12 @@ const getAllBooksHandler = (request) => {
     filteredBooks = filteredBooks.filter((book) => book.finished === (finished === '1'));
   }
 
-  return {
+  return h.response({
     status: 'success',
     data: {
       books: filteredBooks.map(({ id, name, publisher }) => ({ id, name, publisher })),
     },
-  };
+  }).code(200);
 };
 
 const getBookByIdHandler = (request, h) => {
@@ -74,12 +74,12 @@ const getBookByIdHandler = (request, h) => {
     }).code(404);
   }
 
-  return {
+  return h.response({
     status: 'success',
     data: {
       book,
     },
-  }.code(200);
+  }).code(200);
 };
 
 const updateBookByIdHandler = (request, h) => {
@@ -115,10 +115,10 @@ const updateBookByIdHandler = (request, h) => {
     name, year, author, summary, publisher, pageCount, readPage, reading, updatedAt,
   };
 
-  return {
+  return h.response({
     status: 'success',
     message: 'Buku berhasil diperbarui',
-  }.code(200);
+  }).code(200);
 };
 
 const deleteBookByIdHandler = (request, h) => {
@@ -134,10 +134,10 @@ const deleteBookByIdHandler = (request, h) => {
 
   books.splice(index, 1);
 
-  return {
+  return h.response({
     status: 'success',
     message: 'Buku berhasil dihapus',
-  }.code(200);
+  }).code(200);
 };
 
 module.exports = { addBookHandler, getAllBooksHandler, getBookByIdHandler, updateBookByIdHandler, deleteBookByIdHandler };
